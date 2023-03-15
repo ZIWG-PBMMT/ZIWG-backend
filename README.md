@@ -1,4 +1,4 @@
-# backend
-REST API writen in fastAPI
+# Backend
+## REST API written using fastAPI
 
-# TODO - opis api
+TODO - opis api
