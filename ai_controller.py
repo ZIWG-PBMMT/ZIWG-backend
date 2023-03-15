@@ -24,7 +24,6 @@ class AIController:
         img = b64_to_img(gesture)                                   # convert gesture base64 string to np.ndarray img
         ai_decision = self.recognize_img_label_by_ai(img)           # pass img to AI and receive decision what is it
         result = expected_gesture == ai_decision                    # check if AI decision and expected are the same
-        time.sleep(5)       # for async tests
         return result
 
     def recognize_img_label_by_ai(self, img: np.ndarray) -> str:
