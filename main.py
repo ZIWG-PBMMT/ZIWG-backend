@@ -1,3 +1,5 @@
+import time
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -21,4 +23,5 @@ async def root():
 
 @app.post("/gestures/")
 async def create_photo(gesture: Gesture):
-    return ai.is_gesture_correct(gesture.expected_gesture, gesture.gesture)
+    is_gesture_correct = ai.is_gesture_correct(gesture.expected_gesture, gesture.gesture)
+    return {"is_gesture_correct": f"{is_gesture_correct}"}
