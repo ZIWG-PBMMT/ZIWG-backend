@@ -1,2 +1,4 @@
 # backend
-Logika biznesowa aplikacji zespołowej z zastosowań informatyki w gospodarce
+REST API writen in fastAPI
+
+# TODO - opis api
