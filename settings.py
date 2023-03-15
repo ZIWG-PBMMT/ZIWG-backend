@@ -1,0 +1,4 @@
+
+paths = {
+    "model_path": ""
+}
