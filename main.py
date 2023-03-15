@@ -1,6 +1,7 @@
 import time
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 import settings
@@ -15,6 +16,17 @@ class Gesture(BaseModel):
 app = FastAPI()
 ai = AIController(settings.paths.get("model_path"))
 
+origins = [
+    "*"
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 async def root():
@@ -25,3 +37,4 @@ async def root():
 async def create_photo(gesture: Gesture):
     is_gesture_correct = ai.is_gesture_correct(gesture.expected_gesture, gesture.gesture)
     return {"is_gesture_correct": f"{is_gesture_correct}"}
+    # return{"is_gesture_correct": f"{gesture.expected_gesture == gesture.gesture}"}        # for react learning
