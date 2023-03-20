@@ -13,6 +13,7 @@ class Gesture(BaseModel):
 
 app = FastAPI()
 ai = AIController(settings.paths.get("model_path"))
+ai.load_ai_model()
 
 origins = [
     "*"
@@ -33,6 +34,7 @@ async def root():
 
 @app.post("/gestures/")
 async def create_photo(gesture: Gesture):
+    react_prefix = "data:image/jpeg;base64,"
+    gesture.gesture = gesture.gesture.removeprefix(react_prefix)
     is_gesture_correct = ai.is_gesture_correct(gesture.expected_gesture, gesture.gesture)
     return {"is_gesture_correct": f"{is_gesture_correct}"}
-    # return{"is_gesture_correct": f"{gesture.expected_gesture == gesture.gesture}"}        # for react learning
