@@ -7,6 +7,8 @@ from gesture import Gesture
 
 
 ai = AIController(settings.paths.get("model_path"))
+to_do_dir = "to_be_processed"
+done_dir = "processed"
 
 
 def read_gesture_pickle(filepath: str):
@@ -27,7 +29,16 @@ def analyze_by_ai(gesture_to_be_analyzed: Gesture):
     return gesture_to_be_analyzed
 
 
+def prepare_dirs():
+    if not os.path.exists(to_do_dir):
+        os.makedirs(to_do_dir)
+    if not os.path.exists(done_dir):
+        os.makedirs(done_dir)
+
+
 if __name__ == '__main__':
+    prepare_dirs()
+
     while True:
         file_list = os.listdir("to_be_processed")
         if file_list:
