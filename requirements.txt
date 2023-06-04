@@ -2,5 +2,5 @@ numpy
 opencv-python
 fastapi
 pydantic
-
+uvicorn
 
