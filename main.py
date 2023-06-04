@@ -1,19 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 
-import settings
-from ai_controller import AIController
-
-
-class Gesture(BaseModel):
-    expected_gesture: str
-    gesture: str
+import pickle
+import uuid
+from gesture import Gesture
 
 
 app = FastAPI()
-ai = AIController(settings.paths.get("model_path"))
-ai.load_ai_model()
 
 origins = [
     "*"
@@ -29,12 +22,24 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "Please use valid POST endpoint ({base_url}/gestures/"}
+    return {"warning": "Please use valid POST endpoint ({base_url}/gestures/"}
+
+
+@app.get("/gestures/{gesture_uuid}")
+async def get_gesture_result(gesture_uuid):
+    try:
+        with open(f'processed/gesture_{gesture_uuid}.pickle', 'rb') as file:
+            gesture: Gesture = pickle.load(file)
+    except FileNotFoundError:
+        return {"warning": "The gesture has not been processed yet"}
+    return {"is_correct": f"{gesture.is_correct}"}
 
 
 @app.post("/gestures/")
 async def create_photo(gesture: Gesture):
     react_prefix = "data:image/jpeg;base64,"
     gesture.gesture = gesture.gesture.removeprefix(react_prefix)
-    is_gesture_correct = ai.is_gesture_correct(gesture.expected_gesture, gesture.gesture)
-    return {"is_gesture_correct": f"{is_gesture_correct}"}
+    gesture_uuid = str(uuid.uuid4())
+    with open(f'to_be_processed/gesture_{gesture_uuid}.pickle', 'wb') as file:
+        pickle.dump(gesture, file)
+    return {"gesture_uuid": f"{gesture_uuid}"}
