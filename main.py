@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 import pickle
@@ -23,7 +23,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"warning": "Please use valid POST endpoint ({base_url}/gestures/"}
+    raise HTTPException(status_code=405, detail="Please use appropriate endpoint")
 
 
 @app.get("/gestures/{gesture_uuid}")
