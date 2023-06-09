@@ -1,4 +1,4 @@
 
 paths = {
-    "model_path": "smth.pth"
+    "model_path": "model_scripted.pt"
 }
