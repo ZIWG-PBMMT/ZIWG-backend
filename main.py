@@ -11,6 +11,7 @@ app = FastAPI()
 origins = [
     "*"
 ]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -32,7 +33,7 @@ async def get_gesture_result(gesture_uuid):
             gesture: Gesture = pickle.load(file)
     except FileNotFoundError:
         return {"warning": "The gesture has not been processed yet"}
-    return {"is_correct": f"{gesture.is_correct}"}
+    return gesture.is_correct
 
 
 @app.post("/gestures/")

@@ -1,12 +1,11 @@
 import os
 import pickle
-import settings
+from random import randint
+
 import time
-from ai_controller import AIController
 from gesture import Gesture
 
 
-ai = AIController(settings.paths.get("model_path"))
 to_do_dir = "to_be_processed"
 done_dir = "processed"
 
@@ -24,7 +23,7 @@ def save_processed_gesture_pickle(filepath: str, processed_gesture: Gesture):
 
 
 def analyze_by_ai(gesture_to_be_analyzed: Gesture):
-    is_gesture_correct = ai.is_gesture_correct(gesture_to_be_analyzed.expected_gesture, gesture_to_be_analyzed.gesture)
+    is_gesture_correct: bool = True if randint(0, 1) else False
     gesture_to_be_analyzed.is_correct = is_gesture_correct
     return gesture_to_be_analyzed
 
