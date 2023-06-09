@@ -43,4 +43,4 @@ async def create_photo(gesture: Gesture):
     gesture_uuid = str(uuid.uuid4())
     with open(f'to_be_processed/gesture_{gesture_uuid}.pickle', 'wb') as file:
         pickle.dump(gesture, file)
-    return {"gesture_uuid": f"{gesture_uuid}"}
+    return gesture_uuid
