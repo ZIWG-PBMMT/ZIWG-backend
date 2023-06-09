@@ -32,7 +32,7 @@ async def get_gesture_result(gesture_uuid):
         with open(f'processed/gesture_{gesture_uuid}.pickle', 'rb') as file:
             gesture: Gesture = pickle.load(file)
     except FileNotFoundError:
-        return {"warning": "The gesture has not been processed yet"}
+        return None
     return gesture.is_correct
 
 
