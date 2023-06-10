@@ -1,6 +1,9 @@
 numpy
-opencv-python
 fastapi
 pydantic
 uvicorn
+torch
+torchvision
+torchaudio
+Pillow
 
