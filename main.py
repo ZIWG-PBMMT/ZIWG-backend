@@ -8,9 +8,7 @@ from gesture import Gesture
 
 app = FastAPI()
 
-origins = [
-    "*"
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,7 +27,7 @@ async def root():
 @app.get("/gestures/{gesture_uuid}")
 async def get_gesture_result(gesture_uuid):
     try:
-        with open(f'processed/gesture_{gesture_uuid}.pickle', 'rb') as file:
+        with open(f"processed/gesture_{gesture_uuid}.pickle", "rb") as file:
             gesture: Gesture = pickle.load(file)
     except FileNotFoundError:
         return None
@@ -41,6 +39,6 @@ async def create_photo(gesture: Gesture):
     react_prefix = "data:image/jpeg;base64,"
     gesture.gesture = gesture.gesture.removeprefix(react_prefix)
     gesture_uuid = str(uuid.uuid4())
-    with open(f'to_be_processed/gesture_{gesture_uuid}.pickle', 'wb') as file:
+    with open(f"to_be_processed/gesture_{gesture_uuid}.pickle", "wb") as file:
         pickle.dump(gesture, file)
     return gesture_uuid
