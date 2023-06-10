@@ -5,11 +5,29 @@ import time
 
 from gesture import Gesture
 from ai_controller import AIController
+from watchdog.observers import Observer
+from watchdog.events import LoggingEventHandler
 
 
-to_do_dir = "to_be_processed"
-done_dir = "processed"
+TO_BE_PROCESSED_DIR = "to_be_processed"
+PROCESSED_DIR = "processed"
 ai = AIController()
+
+
+class Event(LoggingEventHandler):
+    def dispatch(self, event):
+        process_gesture()
+
+
+def process_gesture():
+    file_list = os.listdir(TO_BE_PROCESSED_DIR)
+    if file_list:
+        time.sleep(1)
+        current_gesture_file_path = os.path.join(TO_BE_PROCESSED_DIR, file_list[0])
+        current_gesture = read_gesture_pickle(current_gesture_file_path)
+        current_gesture_result = analyze_by_ai(current_gesture)
+        save_processed_gesture_pickle(current_gesture_file_path, current_gesture_result)
+        print("Done:", current_gesture_file_path)
 
 
 def read_gesture_pickle(filepath: str):
@@ -32,26 +50,27 @@ def analyze_by_ai(gesture_to_be_analyzed: Gesture):
 
 
 def prepare_dirs():
-    if not os.path.exists(to_do_dir):
-        os.makedirs(to_do_dir)
-    if not os.path.exists(done_dir):
-        os.makedirs(done_dir)
+    if not os.path.exists(TO_BE_PROCESSED_DIR):
+        os.makedirs(TO_BE_PROCESSED_DIR)
+    if not os.path.exists(PROCESSED_DIR):
+        os.makedirs(PROCESSED_DIR)
 
 
 def main():
     prepare_dirs()
 
-    while True:
-        file_list = os.listdir("to_be_processed")
-        if file_list:
-            time.sleep(2)
-            current_gesture_file_path = f"to_be_processed/{file_list[0]}"
-            current_gesture = read_gesture_pickle(current_gesture_file_path)
-            current_gesture_result = analyze_by_ai(current_gesture)
-            save_processed_gesture_pickle(
-                current_gesture_file_path, current_gesture_result
-            )
-            print("Done:", current_gesture_file_path)
+    event_handler = Event()
+    observer = Observer()
+    observer.schedule(event_handler, TO_BE_PROCESSED_DIR, recursive=False)
+    observer.start()
+
+    process_gesture()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
 
 
 if __name__ == "__main__":
