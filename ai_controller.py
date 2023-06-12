@@ -1,8 +1,8 @@
 from PIL import Image
-from convert import b64_to_img
+from convert import b64_to_img, rbh_to_grayscale
 import torch
 import constants
-import torchvision.transforms as transforms
+from transformations import get_transform
 
 
 class AIController:
@@ -13,13 +13,13 @@ class AIController:
 
     def is_gesture_correct(self, expected_gesture: str, gesture: str) -> bool:
         """
-        convert gesture base64 string to np.ndarray img
-        pass img to AI and receive decision what is it
+        convert gesture base64 string to PIL img
+        pass img to AI as a grayscale img and receive decision what is it
         check if AI decision and expected are the same
 
         return result of check
         """
-        return expected_gesture == self.recognize_img(b64_to_img(gesture))
+        return expected_gesture == self.recognize_img(rbh_to_grayscale(b64_to_img(gesture)))
 
     def recognize_img(self, img: Image.Image) -> str:
         """
@@ -34,14 +34,3 @@ class AIController:
         confidence, prediction = torch.max(softmax_result, 1)
 
         return constants.SIGNS[int(prediction)]
-
-
-def get_transform(input_required_size=224):
-    return transforms.Compose(
-        [
-            transforms.Resize((input_required_size, input_required_size)),
-            transforms.CenterCrop(input_required_size),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        ]
-    )
