@@ -1,4 +1,4 @@
-MODEL_PATH = "ai_model.pth"
+MODEL_PATH = "ziwg.pth"
 
 SIGNS = [
     "A",
