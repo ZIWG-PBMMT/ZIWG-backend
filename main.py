@@ -38,6 +38,7 @@ async def get_gesture_result(gesture_uuid):
 async def create_photo(gesture: Gesture):
     react_prefix = "data:image/jpeg;base64,"
     gesture.gesture = gesture.gesture.removeprefix(react_prefix)
+    gesture.expected_gesture = gesture.expected_gesture.upper()
     gesture_uuid = str(uuid.uuid4())
     with open(f"to_be_processed/gesture_{gesture_uuid}.pickle", "wb") as file:
         pickle.dump(gesture, file)
