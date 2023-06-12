@@ -27,10 +27,15 @@ class AIController:
 
         return label
         """
+        print("rozpoznaje")
+        # img.show()
         tensor = get_transform()(img).unsqueeze(0)
 
         raw_result = self.model.forward(tensor)
         softmax_result = torch.nn.functional.softmax(raw_result, dim=1)
         confidence, prediction = torch.max(softmax_result, 1)
 
-        return constants.SIGNS[int(prediction)]
+        sign_detected = constants.SIGNS[int(prediction)]
+        print(sign_detected)
+
+        return sign_detected
