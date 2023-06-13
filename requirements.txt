@@ -6,4 +6,4 @@ torch
 torchvision
 torchaudio
 Pillow
-
+watchdog
